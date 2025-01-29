@@ -1,0 +1,11 @@
+{
+  "appId": "com.kaizenlife.app",
+  "appName": "KaizenLife",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 3000
+    }
+  }
+}
