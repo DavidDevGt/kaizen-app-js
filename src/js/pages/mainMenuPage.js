@@ -7,6 +7,7 @@ class MainMenuPage extends HTMLElement {
             { id: 'tasks', title: 'TaskManager', description: 'Gestiona tus tareas' },
             { id: 'expenses', title: 'ExpenseTracker', description: 'Controla tus gastos' },
             { id: 'notes', title: 'FaztNotes', description: 'Toma notas rápidas' },
+            { id: 'pdf-reader', title: 'PDF Reader', description: 'Lee tus PDFs' },
             { id: 'settings', title: 'Settings', description: 'Configurar la app' }
         ];
 
