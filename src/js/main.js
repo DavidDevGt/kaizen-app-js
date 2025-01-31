@@ -1,6 +1,5 @@
 /** Core */
 import AppLayout from './web-components/app-layout';
-import { router } from './router';
 import requestPermissions from "./pluginsPermissions";
 
 /** Import pages */
@@ -9,7 +8,9 @@ import TasksPage from './pages/taskManagerPage';
 import SettingsPage from './pages/settingsPage';
 
 
-/** Define routes */
+/** Import routes */
+import { router } from './router';
+
 router.addRoute('/', () => {
     return document.createElement('main-menu-page');
 });

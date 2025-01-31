@@ -1,4 +1,4 @@
-import "./navbar";
+import Navbar from './navbar.js';
 
 class AppLayout extends HTMLElement {
     constructor() {

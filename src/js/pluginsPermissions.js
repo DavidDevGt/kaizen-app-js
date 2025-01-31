@@ -1,7 +1,7 @@
 import { Camera } from "@capacitor/camera";
 import { Filesystem } from "@capacitor/filesystem";
 import { LocalNotifications } from "@capacitor/local-notifications";
-import { Preferences } from "@capacitor/preferences";
+import PreferencesService from './services/preferencesService';
 
 const PERMISSIONS_REQUESTED_KEY = "permissionsRequested";
 
@@ -10,7 +10,7 @@ const PERMISSIONS_REQUESTED_KEY = "permissionsRequested";
  */
 async function requestPermissions() {
     try {
-        const { value } = await Preferences.get({ key: PERMISSIONS_REQUESTED_KEY });
+        const value = await PreferencesService.getPreference(PERMISSIONS_REQUESTED_KEY);
 
         if (value === "true") {
             console.log("🔍 Los permisos ya fueron solicitados previamente. No se volverán a pedir.");
@@ -37,7 +37,7 @@ async function requestPermissions() {
             await LocalNotifications.requestPermissions();
         }
 
-        await Preferences.set({ key: PERMISSIONS_REQUESTED_KEY, value: "true" });
+        await PreferencesService.setPreference(PERMISSIONS_REQUESTED_KEY, "true");
 
         console.log("✅ Permisos gestionados correctamente.");
     } catch (error) {
