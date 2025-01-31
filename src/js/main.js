@@ -6,6 +6,7 @@ import requestPermissions from "./pluginsPermissions";
 import MainMenuPage from './pages/mainMenuPage';
 import TasksPage from './pages/taskManagerPage';
 import SettingsPage from './pages/settingsPage';
+import PDFReaderPage from './pages/pdfReaderPage';
 
 
 /** Import routes */
@@ -21,6 +22,10 @@ router.addRoute('/tasks', () => {
 
 router.addRoute('/settings', () => {
     return document.createElement('settings-page');
+});
+
+router.addRoute('/pdf-reader', () => {
+    return document.createElement('pdf-reader-page');
 });
 
 router.init();
