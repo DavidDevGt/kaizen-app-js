@@ -78,6 +78,19 @@ class FileService {
             return false;
         }
     }
+
+    static async createDirectory(directoryPath) {
+        try {
+            await Filesystem.mkdir({
+                path: directoryPath,
+                directory: Directory.Data,
+            });
+            return true;
+        } catch (error) {
+            console.error("Error al crear directorio:", error);
+            return false;
+        }
+    }
 }
 
 export default FileService;
