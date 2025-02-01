@@ -251,7 +251,6 @@ class TasksPage extends HTMLElement {
           </div>
         </header>
 
-        <!-- Área de tareas -->
         <section class="tasks-content fade-in" aria-live="polite">
           <div class="empty-state">
             <p>${this.CONFIG.emptyStateMessage}</p>

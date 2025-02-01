@@ -16,9 +16,6 @@ async function requestPermissions() {
             console.log("🔍 Los permisos ya fueron solicitados previamente. No se volverán a pedir.");
             return;
         }
-
-        console.log("🔍 Verificando y solicitando permisos por primera vez...");
-
         const cameraStatus = await Camera.checkPermissions();
         if (cameraStatus.camera !== "granted") {
             console.log("📸 Solicitando permiso de cámara...");
