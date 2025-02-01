@@ -1,4 +1,3 @@
-import PDFService from '../services/pdfService';
 
 const styles = `
   :host {
@@ -135,7 +134,17 @@ const styles = `
     }
   }
 `;
+import PDFService from '../services/pdfService';
+import { PDFViewer } from 'capacitor7-pdf-viewer';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
+/**
+ * Componente PDFReaderPage:
+ * - Selecciona un PDF (base64) desde "PDFService.pickPDF()"
+ * - Lo guarda en el Filesystem
+ * - Llama a PDFViewer.openPDF({ url: 'ruta-nativa-del-archivo' })
+ * - Deja de usar <iframe>, pues la vista nativa reemplaza su función.
+ */
 class PDFReaderPage extends HTMLElement {
   constructor() {
     super();
@@ -146,11 +155,11 @@ class PDFReaderPage extends HTMLElement {
         { icon: "📄", label: "Seleccionar PDF", action: "pick" },
         { icon: "⏪", label: "Página anterior", action: "prev" },
         { icon: "⏩", label: "Página siguiente", action: "next" },
-      ]
+      ],
     };
     this.state = {
       currentPage: 1,
-      totalPages: 10, // Valor por defecto; sin pdf.js no se puede conocer el total real.
+      totalPages: 10, // Valor por defecto (sin pdf.js, no sabemos el total real)
       pdfFile: null,
       pdfUrl: null,
     };
@@ -177,11 +186,15 @@ class PDFReaderPage extends HTMLElement {
             <h2>${this.CONFIG.title}</h2>
           </div>
           <div class="toolbar">
-            ${this.CONFIG.toolbarButtons.map((btn) => `
-              <button title="${btn.label}" data-action="${btn.action}">
-                ${btn.icon}
-              </button>
-            `).join('')}
+            ${this.CONFIG.toolbarButtons
+              .map(
+                (btn) => `
+                <button title="${btn.label}" data-action="${btn.action}">
+                  ${btn.icon}
+                </button>
+              `
+              )
+              .join("")}
           </div>
         </header>
         <main>
@@ -205,9 +218,13 @@ class PDFReaderPage extends HTMLElement {
         this.handleAction(action);
       });
     });
-    this.shadowRoot.querySelector("#go-home").addEventListener("click", () => {
-      window.router.loadRoute("/");
-    });
+    this.shadowRoot
+      .querySelector("#go-home")
+      .addEventListener("click", () => {
+        if (window.router) {
+          window.router.loadRoute("/");
+        }
+      });
   }
 
   cleanup() {
@@ -217,21 +234,17 @@ class PDFReaderPage extends HTMLElement {
   async handleAction(action) {
     switch (action) {
       case "prev":
-        if (this.state.currentPage > 1) {
-          this.changePage(this.state.currentPage - 1);
-        }
-        break;
       case "next":
-        if (this.state.currentPage < this.state.totalPages) {
-          this.changePage(this.state.currentPage + 1);
-        }
+        // Si el visor es 100% nativo, la navegación la maneja la propia Activity nativa.
+        // Puedes mostrar un alert o desactivar estos botones.
+        alert("Navegación nativa: usa el visor del plugin en Android.");
         break;
       case "pick":
         // Llama al servicio para seleccionar el PDF
         const file = await PDFService.pickPDF();
         if (file) {
           this.state.pdfFile = file;
-          this.loadPDF(file);
+          this.loadPDF(file); // Maneja la carga nativa
         } else {
           console.warn("No se seleccionó ningún PDF.");
         }
@@ -243,96 +256,60 @@ class PDFReaderPage extends HTMLElement {
         console.warn("Acción de toolbar no reconocida:", action);
     }
   }
-  async changePage(newPage) {
-    console.log(`DEBUG -> changePage() called with newPage: ${newPage}`);
-    const docContainer = this.shadowRoot.getElementById("doc-container");
-    docContainer.classList.add("fade-out");
-
-    setTimeout(() => {
-      console.log(`DEBUG -> setTimeout callback in changePage. Updating currentPage to ${newPage}`);
-      this.state.currentPage = newPage;
-      this.updatePageIndicator();
-
-      if (this.state.pdfUrl) {
-        console.log(`DEBUG -> pdfUrl is set. Rendering page ${newPage}`);
-        this.renderPage(newPage);
-      } else {
-        console.log(`DEBUG -> pdfUrl is not set. Cannot render page`);
-      }
-
-      docContainer.classList.remove("fade-out");
-    }, 200);
-  }
 
   updatePageIndicator() {
     console.log(
-      `DEBUG -> updatePageIndicator() called. Current page: ${this.state.currentPage}, Total pages: ${this.state.totalPages}`
+      `DEBUG -> updatePageIndicator() called. current page: ${this.state.currentPage}, total pages: ${this.state.totalPages}`
     );
     const indicator = this.shadowRoot.getElementById("page-indicator");
     indicator.textContent = `Página ${this.state.currentPage} de ${this.state.totalPages}`;
   }
 
   /**
-   * Convierte una cadena Base64 a un Blob.
-   * @param {string} base64 - La cadena en Base64.
-   * @param {string} mime - El tipo MIME, por ejemplo, "application/pdf".
-   * @returns {Blob}
+   * Carga el PDF usando el plugin nativo en lugar de iframe.
+   * file.data es un string Base64 ("JVBERi0xLjQK...").
    */
-  base64ToBlob(base64, mime) {
-    console.log(`DEBUG -> base64ToBlob() called with mime: ${mime}. Converting base64 to Blob...`);
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    console.log(`DEBUG -> base64ToBlob() conversion complete. Returning Blob object.`);
-    return new Blob([byteArray], { type: mime });
-  }
-
-  /**
-   * Renderiza la página actual actualizando el src del iframe.
-   * Se utiliza el fragmento "#page=" para indicarle al visor nativo la página a mostrar.
-   * @param {number} pageNumber
-   */
-  renderPage(pageNumber) {
-    console.log(`DEBUG -> renderPage() called with pageNumber: ${pageNumber}`);
-    const docContainer = this.shadowRoot.getElementById("doc-container");
-    docContainer.innerHTML = `
-      <iframe src="${this.state.pdfUrl}#page=${pageNumber}" style="width: 100%; height: 100%;" frameborder="0"></iframe>
-    `;
-  }
-
   async loadPDF(file) {
     console.log(`DEBUG -> loadPDF() called with file: `, JSON.stringify(file));
-    const docContainer = this.shadowRoot.getElementById("doc-container");
 
     if (!file.data) {
-      console.error("No se encontró la data del PDF.");
+      console.error("No se encontró la data del PDF (base64).");
       return;
     }
 
-    console.log(`DEBUG -> PDF data found. Converting base64 to Blob...`);
-    const blob = this.base64ToBlob(file.data, "application/pdf");
-    const url = URL.createObjectURL(blob);
+    try {
+      // 1) Guardar Base64 en el Filesystem
+      const fileName = `picked-${Date.now()}.pdf`;
+      console.log("DEBUG -> Escribiendo PDF en Filesystem...");
+      await Filesystem.writeFile({
+        path: fileName,
+        data: file.data, // Base64
+        directory: Directory.Documents, // O Directory.Data u otro
+        recursive: true,
+      });
 
-    console.log(`DEBUG -> Blob converted, creating object URL...`);
-    this.state.pdfUrl = url;
+      // 2) Obtener ruta nativa para pasársela al plugin
+      const uriResult = await Filesystem.getUri({
+        path: fileName,
+        directory: Directory.Documents,
+      });
 
-    console.log(`DEBUG -> PDF URL created. Fetching total pages...`);
-    console.log(`DEBUG -> Url: ${url}`);
+      console.log("DEBUG -> Ruta nativa del PDF:", uriResult.uri);
 
-    // Reinicia la página actual a 1 y actualiza el indicador
-    this.state.currentPage = 1;
-    console.log(`DEBUG -> PDF URL set. currentPage reset to 1. Updating page indicator and rendering...`);
-    this.updatePageIndicator();
+      // 3) Usar el plugin nativo para abrir el PDF
+      console.log("DEBUG -> Abriendo PDF con plugin nativo...");
+      await PDFViewer.openPDF({ url: uriResult.uri });
 
-    // Renderiza la primera página
-    this.renderPage(1);
+      // 4) (Opcional) Actualiza estado/indicador
+      this.state.pdfUrl = uriResult.uri;
+      this.state.currentPage = 1;
+      this.updatePageIndicator();
+      console.log("DEBUG -> PDF abierto exitosamente en Android nativo.");
+
+    } catch (err) {
+      console.error("Error abriendo PDF de forma nativa:", err);
+    }
   }
-
 }
 
 customElements.define("pdf-reader-page", PDFReaderPage);

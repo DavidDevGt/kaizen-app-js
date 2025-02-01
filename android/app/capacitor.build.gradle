@@ -19,6 +19,7 @@ dependencies {
     implementation project(':capacitor-splash-screen')
     implementation project(':capacitor-toast')
     implementation project(':capawesome-capacitor-file-picker')
+    implementation project(':capacitor7-pdf-viewer')
 
 }
 

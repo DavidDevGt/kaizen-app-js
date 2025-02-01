@@ -31,3 +31,6 @@ project(':capacitor-toast').projectDir = new File('../node_modules/@capacitor/to
 
 include ':capawesome-capacitor-file-picker'
 project(':capawesome-capacitor-file-picker').projectDir = new File('../node_modules/@capawesome/capacitor-file-picker/android')
+
+include ':capacitor7-pdf-viewer'
+project(':capacitor7-pdf-viewer').projectDir = new File('../../capacitor7-pdf-viewer/android')

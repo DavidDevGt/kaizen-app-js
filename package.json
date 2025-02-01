@@ -29,7 +29,8 @@
     "@capacitor/splash-screen": "latest",
     "@capacitor/toast": "^7.0.0",
     "@capawesome/capacitor-file-picker": "^7.0.1",
-    "capacitor-app": "file:"
+    "capacitor-app": "file:",
+    "capacitor7-pdf-viewer": "file:../capacitor7-pdf-viewer"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
