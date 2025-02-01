@@ -3,146 +3,172 @@ import TaskModal from "../web-components/task-modal.js";
 import PreferencesService from "../services/preferencesService.js";
 
 const styles = `
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap'); 
-                :host { 
-                    --primary-color: #2563eb; 
-                    --primary-light: #3b82f6; 
-                    --primary-dark: #1d4ed8; 
-                    --success-color: #10b981; 
-                    --error-color: #ef4444; 
-                    --warning-color: #f59e0b; 
-                    --text-primary: #1f2937; 
-                    --text-secondary: #4b5563; 
-                    --background-primary: #ffffff; 
-                    --background-secondary: #f3f4f6; 
-                    --spacing-xs: 0.5rem; 
-                    --spacing-sm: 0.75rem; 
-                    --spacing-md: 1rem; 
-                    --spacing-lg: 1.5rem; 
-                    --spacing-xl: 2rem; 
-                    --border-radius-sm: 0.375rem; 
-                    --border-radius-md: 0.5rem; 
-                    --border-radius-lg: 0.75rem; 
-                    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); 
-                    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1); 
-                    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1); 
-                    --transition-fast: 150ms; 
-                    --transition-normal: 300ms; 
-                    
-                    display: block; 
-                    font-family: 'Inter', sans-serif; 
-                    color: var(--text-primary); 
-                    background: var(--background-primary); 
-                    min-height: 100vh; 
-                } 
-                *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } 
-                .tasks-container { 
-                    max-width: 1200px; 
-                    margin: 0 auto; 
-                    padding: var(--spacing-xl); 
-                    animation: fadeIn var(--transition-normal) ease-out; 
-                } 
-                @keyframes fadeIn { 
-                    from { opacity: 0; transform: translateY(10px); } 
-                    to { opacity: 1; transform: translateY(0); } 
-                } 
-                .tasks-header { 
-                    margin-bottom: var(--spacing-xl); 
-                    text-align: center; 
-                } 
-                .tasks-title { 
-                    font-size: clamp(1.875rem, 5vw, 3rem); 
-                    color: var(--primary-color); 
-                    margin-bottom: var(--spacing-sm); 
-                    font-weight: 600; 
-                    letter-spacing: -0.025em; 
-                } 
-                .tasks-subtitle { 
-                    font-size: 1.125rem; 
-                    color: var(--text-secondary); 
-                    font-weight: 300; 
-                    max-width: 600px; 
-                    margin: 0 auto; 
-                } 
-                .tasks-content { 
-                    display: grid; 
-                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-                    gap: var(--spacing-lg); 
-                    margin: var(--spacing-xl) 0; 
-                    transition: all var(--transition-normal) ease-in-out;
-                } 
-                .tasks-content.fade-in {
-                    opacity: 0;
-                    transform: scale(0.95);
-                    transition: opacity var(--transition-normal) ease-out, transform var(--transition-normal) ease-out;
-                }
-                .tasks-content.fade-in.show {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-                .empty-state { 
-                    text-align: center; 
-                    padding: var(--spacing-xl); 
-                    background: var(--background-secondary); 
-                    border-radius: var(--border-radius-lg); 
-                    color: var(--text-secondary); 
-                    box-shadow: var(--shadow-sm);
-                    transition: all var(--transition-normal) ease-in-out;
-                } 
-                .tasks-nav { 
-                    display: flex; 
-                    justify-content: center; 
-                    gap: var(--spacing-md); 
-                    margin-top: var(--spacing-xl); 
-                } 
-                .button { 
-                    background-color: var(--primary-color); 
-                    color: white; 
-                    border: none; 
-                    border-radius: var(--border-radius-md); 
-                    padding: var(--spacing-sm) var(--spacing-lg); 
-                    font-size: 1rem; 
-                    font-weight: 500; 
-                    cursor: pointer; 
-                    transition: all var(--transition-fast) ease-in-out; 
-                    display: inline-flex; 
-                    align-items: center; 
-                    gap: var(--spacing-xs); 
-                    position: relative; 
-                    overflow: hidden; 
-                } 
-                .button:hover { 
-                    background-color: var(--primary-light); 
-                    transform: translateY(-2px); 
-                    box-shadow: var(--shadow-md); 
-                } 
-                .button:active { 
-                    transform: translateY(0); 
-                } 
-                .button:focus-visible { 
-                    outline: 3px solid var(--primary-light); 
-                    outline-offset: 2px; 
-                } 
-                .button::after { 
-                    content: ''; 
-                    position: absolute; 
-                    inset: 0; 
-                    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent); 
-                    transform: translateX(-100%); 
-                    transition: transform var(--transition-normal); 
-                } 
-                .button:hover::after { 
-                    transform: translateX(100%); 
-                } 
-                @media (prefers-reduced-motion: reduce) { 
-                    :host *, .button, .tasks-container { 
-                        animation: none; 
-                        transition: none; 
-                    } 
-                    .button::after { 
-                        display: none; 
-                    } 
-                } 
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  :host {
+    --primary-color: #2563eb;
+    --primary-light: #3b82f6;
+    --text-primary: #1f2937;
+    --background-primary: #ffffff;
+    --background-secondary: #f3f4f6;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --border-radius-md: 0.5rem;
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --transition-fast: 150ms;
+    --transition-normal: 300ms;
+
+    display: block;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background: var(--background-primary);
+    min-height: 100vh;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Encabezado con botón de regresar */
+  .header {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md);
+    background: var(--background-secondary);
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.75rem;
+    margin-right: var(--spacing-md);
+    color: var(--primary-color);
+    transition: transform var(--transition-fast);
+  }
+  
+  .back-button:hover {
+    transform: scale(1.1);
+  }
+
+  .header-content {
+    flex: 1;
+    text-align: center;
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--text-primary);
+    opacity: 0.8;
+    margin-top: var(--spacing-xs);
+  }
+
+  /* Contenedor principal de tareas */
+  .tasks-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+  }
+
+  .tasks-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    transition: all var(--transition-normal) ease-in-out;
+  }
+
+  .tasks-content.fade-in {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity var(--transition-normal) ease-out, transform var(--transition-normal) ease-out;
+  }
+
+  .tasks-content.fade-in.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--spacing-lg);
+    background: var(--background-secondary);
+    border-radius: var(--border-radius-md);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal) ease-in-out;
+  }
+
+.fab-button {
+  position: fixed;
+  right: var(--spacing-lg);
+  bottom: var(--spacing-lg);
+  background-color: var(--primary-color);
+  color: #FFFFFF;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  animation: fab-appear 0.5s ease-out;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@keyframes fab-appear {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (hover: hover) {
+  .fab-button:hover {
+    background-color: var(--primary-light);
+    transform: scale(1.1);
+  }
+}
+
+.fab-button:active {
+  transform: scale(0.95);
+}
+
+.fab-button .icon {
+  transition: transform var(--transition-normal);
+}
+
+.fab-button:active .icon {
+  transform: rotate(360deg);
+}
+
+  @media (prefers-reduced-motion: reduce) {
+    :host *, .fab-button, .tasks-container {
+      animation: none;
+      transition: none;
+    }
+  }
 `;
 
 class TasksPage extends HTMLElement {
@@ -154,7 +180,6 @@ class TasksPage extends HTMLElement {
             defaultTitle: 'TaskManager',
             defaultSubtitle: 'Organiza tus tareas de manera eficiente y simple',
             emptyStateMessage: 'No hay tareas pendientes. ¡Comienza agregando una!',
-
             addTaskButtonLabel: 'Agregar tarea',
             storageKey: 'tasks_data',
             tags: ['Personal', 'Work', 'Health', 'Study', 'Home', 'Other'],
@@ -164,13 +189,11 @@ class TasksPage extends HTMLElement {
         this._render();
     }
 
-
     async connectedCallback() {
         console.log('TasksPage component montado');
         await this._loadTasks();
         this._renderTasks();
     }
-
 
     static get observedAttributes() {
         return ['title', 'description', 'completed', 'priority', 'tags', 'image'];
@@ -215,39 +238,32 @@ class TasksPage extends HTMLElement {
 
     _render() {
         this.shadowRoot.innerHTML = `
-            <style>
-                ${styles}
-            </style>
+      <style>
+        ${styles}
+      </style>
 
-            <main class="tasks-container">
-                <header class="tasks-header">
-                    <h1 class="tasks-title">
-                        <span aria-hidden="true">📝</span>
-                        <span>${this.CONFIG.defaultTitle}</span>
-                    </h1>
-                    <p class="tasks-subtitle">${this.CONFIG.defaultSubtitle}</p>
-                </header>
+      <main class="tasks-container">
+        <header class="header">
+          <button class="back-button" id="go-home" aria-label="Volver a la página principal">🏠</button>
+          <div class="header-content">
+            <div class="title">${this.CONFIG.defaultTitle}</div>
+            <div class="subtitle">${this.CONFIG.defaultSubtitle}</div>
+          </div>
+        </header>
 
-                <section class="tasks-content fade-in" aria-live="polite">
-                    <div class="empty-state">
-                        <p>${this.CONFIG.emptyStateMessage}</p>
-                    </div>
-                </section>
+        <!-- Área de tareas -->
+        <section class="tasks-content fade-in" aria-live="polite">
+          <div class="empty-state">
+            <p>${this.CONFIG.emptyStateMessage}</p>
+          </div>
+        </section>
 
-                <nav class="tasks-nav">
-                    <button class="button" id="add-task" aria-label="Agregar nueva tarea">
-                        <span aria-hidden="true">➕</span>
-                        <span>${this.CONFIG.addTaskButtonLabel}</span>
-                    </button>
-                    <button class="button" id="go-home" aria-label="Volver a la página principal">
-                        <span aria-hidden="true">🏠</span>
-                        <span>Volver al Inicio</span>
-                    </button>
-                </nav>
+        <task-modal id="task-modal"></task-modal>
 
-                <task-modal id="task-modal"></task-modal>
-            </main>
-        `;
+        <button class="fab-button" id="add-task" aria-label="Agregar nueva tarea"><span class="icon">+</span></button>
+      </main>
+    `;
+
         this.tasksContainer = this.shadowRoot.querySelector(".tasks-content");
         this._renderTasks();
         this._setupEventListeners();
@@ -261,12 +277,10 @@ class TasksPage extends HTMLElement {
 
         if (this.tasks.length === 0) {
             this.tasksContainer.innerHTML = `
-                <div class="empty-state">
-                    <p>${this.CONFIG.emptyStateMessage}</p>
-                </div>
-            `;
-
-
+        <div class="empty-state">
+          <p>${this.CONFIG.emptyStateMessage}</p>
+        </div>
+      `;
         } else {
             // Añadir clase para animación
             this.tasksContainer.classList.add('show');
@@ -321,9 +335,11 @@ class TasksPage extends HTMLElement {
      * Configura los listeners de eventos
      */
     _setupEventListeners() {
+        // Botón de regresar
         const homeButton = this.shadowRoot.querySelector("#go-home");
         homeButton.addEventListener("click", () => window.router.loadRoute("/"));
 
+        // Botón para agregar tarea (FAB)
         const addTaskButton = this.shadowRoot.querySelector("#add-task");
         const taskModal = this.shadowRoot.querySelector("#task-modal");
 
@@ -345,10 +361,8 @@ class TasksPage extends HTMLElement {
             this._saveTasks();
             this._renderTasks();
         });
-
     }
 }
 
 customElements.define("tasks-page", TasksPage);
-
 export default TasksPage;

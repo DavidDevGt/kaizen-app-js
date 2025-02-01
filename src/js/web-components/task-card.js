@@ -1,178 +1,168 @@
 const styles = `
-                :host {
-                    --ios-blue: #007AFF;
-                    --ios-gray: #8E8E93;
-                    --ios-background: #FFFFFF;
-                    --ios-light-gray: #F2F2F7;
-                    --ios-text: #000000;
-                    --ios-secondary-text: #8E8E93;
-                    --ios-red: #FF3B30;
-                    --ios-green: #34C759;
-                    --ios-orange: #FF9500;
-                    --ios-border-radius: 13px;
-                    --ios-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  :host {
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin: 12px 0;
+  }
 
-                    display: block;
-                    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-                    background-color: var(--ios-background);
-                    border-radius: var(--ios-border-radius);
-                    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-                    padding: 24px;
-                    margin: 16px 0;
-                    transition: var(--ios-transition);
-                    position: relative;
-                    transform: translateY(0);
-                    opacity: 1;
-                }
+  :host(:hover) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
 
-                :host(:hover) {
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-                    transform: translateY(-1px);
-                }
+  .card-container {
+    padding: 16px;
+  }
 
-                .task-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 20px;
-                }
+  /* Cabecera y título de la tarea */
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-                .task-title {
-                    display: flex;
-                    align-items: center;
-                    font-size: 17px;
-                    font-weight: 600;
-                    color: var(--ios-text);
-                    gap: 8px;
-                }
+  .task-title {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #222222;
+    gap: 10px;
+  }
 
-                .task-title input[type="checkbox"] {
-                    appearance: none;
-                    width: 22px;
-                    height: 22px;
-                    border: 2px solid var(--ios-blue);
-                    border-radius: 50%;
-                    margin: 0;
-                    transition: var(--ios-transition);
-                    position: relative;
-                }
+  .task-title input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #007aff;
+    border-radius: 4px;
+    margin: 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
 
-                .task-title input[type="checkbox"]:checked {
-                    background-color: var(--ios-blue);
-                }
+  .task-title input[type="checkbox"]:checked {
+    background-color: #007aff;
+    border-color: #007aff;
+  }
 
-                .task-title input[type="checkbox"]:checked::after {
-                    content: "✓";
-                    position: absolute;
-                    color: white;
-                    font-size: 14px;
-                    left: 4px;
-                    top: 1px;
-                }
+  .task-title input[type="checkbox"]:checked::after {
+    content: "✓";
+    display: block;
+    color: #fff;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+  }
 
-                .priority-indicator {
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    margin-left: 8px;
-                }
+  .priority-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #FBBF24; /* valor por defecto, se puede sobrescribir inline */
+  }
 
-                .task-tags {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 8px;
-                    margin-top: 16px;
-                    padding: 0 4px;
-                }
+  /* Etiquetas de la tarea */
+  .task-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0;
+  }
 
-                .tag {
-                    background-color: var(--ios-light-gray);
-                    color: var(--ios-secondary-text);
-                    padding: 4px 12px;
-                    border-radius: 16px;
-                    font-size: 13px;
-                    font-weight: 500;
-                }
+  .tag {
+    background-color: #f2f2f7;
+    color: #8e8e93;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+  }
 
-                .task-description {
-                    margin-top: 24px;
-                    font-size: 15px;
-                    color: var(--ios-secondary-text);
-                    line-height: 1.5;
-                    padding: 0 4px;
-                }
+  /* Descripción e imagen */
+  .task-description {
+    font-size: 15px;
+    color: #555555;
+    line-height: 1.5;
+    margin: 12px 0;
+  }
 
-                .task-image {
-                    margin-top: 24px;
-                    width: 100%;
-                    height: auto;
-                    border-radius: 12px;
-                    object-fit: cover;
-                    transition: var(--ios-transition);
-                }
+  .task-image {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    margin: 12px 0;
+    transition: opacity 0.2s ease;
+  }
 
-                .task-image:hover {
-                    opacity: 0.95;
-                }
+  .task-image:hover {
+    opacity: 0.95;
+  }
 
-                .subtasks {
-                    margin-top: 28px;
-                    padding: 0 4px;
-                }
+  /* Subtareas */
+  .subtasks {
+    margin: 16px 0;
+  }
 
-                .subtasks h4 {
-                    font-size: 15px;
-                    font-weight: 600;
-                    color: var(--ios-text);
-                    margin-bottom: 8px;
-                }
+  .subtasks h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 8px;
+  }
 
-                .subtasks ul {
-                    list-style: none;
-                    padding: 0;
-                    margin: 0;
-                    display: grid;
-                    gap: 12px;
-                }
+  .subtasks ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-                .task-footer {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-top: 28px;
-                    padding-top: 16px;
-                    border-top: 1px solid var(--ios-light-gray);
-                    padding: 16px 4px 0;
-                }
+  /* Pie de tarjeta */
+  .task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f2f2f7;
+    padding-top: 12px;
+    margin-top: 12px;
+  }
 
-                .timestamp {
-                    font-size: 13px;
-                    color: var(--ios-secondary-text);
-                }
+  .timestamp {
+    font-size: 12px;
+    color: #8e8e93;
+  }
 
-                .actions {
-                    display: flex;
-                    gap: 16px;
-                }
+  .actions {
+    display: flex;
+    gap: 12px;
+  }
 
-                .action-button {
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    color: var(--ios-blue);
-                    font-size: 17px;
-                    padding: 4px;
-                    transition: var(--ios-transition);
-                    border-radius: 6px;
-                }
+  .action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s ease;
+    padding: 4px;
+    border-radius: 6px;
+  }
 
-                .action-button:hover {
-                    background-color: var(--ios-light-gray);
-                }
+  .action-button.edit-button {
+    color: #007aff;
+  }
 
-                .action-button.delete-button {
-                    color: var(--ios-red);
-                }
+  .action-button.delete-button {
+    color: #ff3b30;
+  }
+
+  .action-button:hover {
+    background-color: #f2f2f7;
+  }
 `;
 
 import './subtask-item.js';
@@ -244,54 +234,54 @@ class TaskCard extends HTMLElement {
 
     _render() {
         this.shadowRoot.innerHTML = `
-            <style>
-                ${styles}
-            </style>
-    
+          <style>
+            ${styles}
+          </style>
+          <div class="card-container">
             <div class="task-header">
-                <label class="task-title">
-                    <input type="checkbox" id="task-completed" ${this.task.completed ? 'checked' : ''} />
-                    ${this.task.title}
-                </label>
-                <div class="priority-indicator" style="background-color: ${this._getPriorityColor(this.task.priority)};"></div>
+              <label class="task-title">
+                <input type="checkbox" id="task-completed" ${this.task.completed ? 'checked' : ''} />
+                ${this.task.title}
+              </label>
+              <div class="priority-indicator" style="background-color: ${this._getPriorityColor(this.task.priority)};"></div>
             </div>
-    
+      
             ${this.task.tags.length > 0 ? `
-                <div class="task-tags">
-                    ${this.task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                </div>
+              <div class="task-tags">
+                ${this.task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+              </div>
             ` : ''}
-    
+      
             ${this.task.description ? `<div class="task-description">${this.task.description}</div>` : ''}
-    
+      
             ${this.task.image ? `<img src="${this.task.image}" alt="Imagen de la tarea" class="task-image"/>` : ''}
-    
+      
             ${this.task.subtasks.length > 0 ? `
-                <div class="subtasks">
-                    <h4>Subtareas</h4>
-                    <ul>
-                        ${this.task.subtasks.map(subtask => `
-                            <li>
-                                <subtask-item 
-                                    id="${subtask.id}" 
-                                    title="${subtask.title}" 
-                                    completed="${subtask.completed}"
-                                ></subtask-item>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
+              <div class="subtasks">
+                <h4>Subtareas</h4>
+                <ul>
+                  ${this.task.subtasks.map(subtask => `
+                    <li>
+                      <subtask-item 
+                        id="${subtask.id}" 
+                        title="${subtask.title}" 
+                        completed="${subtask.completed}"
+                      ></subtask-item>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
             ` : ''}
-    
+      
             <div class="task-footer">
-                <span class="timestamp">${new Date(this.task.timestamp).toLocaleString()}</span>
-                <div class="actions">
-                    <button class="action-button edit-button" aria-label="Editar tarea">✏️</button>
-                    <button class="action-button delete-button" aria-label="Eliminar tarea">🗑️</button>
-                </div>
+              <span class="timestamp">${new Date(this.task.timestamp).toLocaleString()}</span>
+              <div class="actions">
+                <button class="action-button edit-button" aria-label="Editar tarea">✏️</button>
+                <button class="action-button delete-button" aria-label="Eliminar tarea">🗑️</button>
+              </div>
             </div>
+          </div>
         `;
-
         this._setupEventListeners();
     }
 
