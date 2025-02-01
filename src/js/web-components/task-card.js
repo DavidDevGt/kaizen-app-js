@@ -1,73 +1,4 @@
-import './subtask-item.js';
-
-class TaskCard extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: "open" });
-
-        this.task = {
-            id: null,
-            title: '',
-            description: '',
-            subtasks: [],
-            completed: false,
-            timestamp: Date.now(),
-            priority: 'medium',
-            tags: [],
-            image: null,
-        };
-
-        this._render();
-    }
-
-    static get observedAttributes() {
-        return ['title', 'description', 'completed', 'priority', 'tags', 'image'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            if (name === 'tags') {
-                this.task[name] = newValue.split(',').map(tag => tag.trim());
-            } else if (name === 'completed') {
-                this.task[name] = newValue === 'true';
-            } else {
-                this.task[name] = newValue;
-            }
-            this._render();
-        }
-    }
-
-    connectedCallback() {
-        this._setupEventListeners();
-    }
-
-    disconnectedCallback() {
-        this._cleanup();
-    }
-
-    setTask(task) {
-        this.task = { ...this.task, ...task };
-        this._render();
-
-        const priorityIndicator = this.shadowRoot.querySelector('.priority-indicator');
-        if (priorityIndicator) {
-            priorityIndicator.style.backgroundColor = this._getPriorityColor(this.task.priority);
-        }
-    }
-
-
-    _getPriorityColor(priority) {
-        const priorityColors = {
-            low: '#6EE7B7',
-            medium: '#FBBF24',
-            high: '#F87171',
-        };
-        return priorityColors[priority] || '#FBBF24';
-    }
-
-    _render() {
-        this.shadowRoot.innerHTML = `
-            <style>
+const styles = `
                 :host {
                     --ios-blue: #007AFF;
                     --ios-gray: #8E8E93;
@@ -242,6 +173,79 @@ class TaskCard extends HTMLElement {
                 .action-button.delete-button {
                     color: var(--ios-red);
                 }
+`;
+
+import './subtask-item.js';
+
+class TaskCard extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+
+        this.task = {
+            id: null,
+            title: '',
+            description: '',
+            subtasks: [],
+            completed: false,
+            timestamp: Date.now(),
+            priority: 'medium',
+            tags: [],
+            image: null,
+        };
+
+        this._render();
+    }
+
+    static get observedAttributes() {
+        return ['title', 'description', 'completed', 'priority', 'tags', 'image'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            if (name === 'tags') {
+                this.task[name] = newValue.split(',').map(tag => tag.trim());
+            } else if (name === 'completed') {
+                this.task[name] = newValue === 'true';
+            } else {
+                this.task[name] = newValue;
+            }
+            this._render();
+        }
+    }
+
+    connectedCallback() {
+        this._setupEventListeners();
+    }
+
+    disconnectedCallback() {
+        this._cleanup();
+    }
+
+    setTask(task) {
+        this.task = { ...this.task, ...task };
+        this._render();
+
+        const priorityIndicator = this.shadowRoot.querySelector('.priority-indicator');
+        if (priorityIndicator) {
+            priorityIndicator.style.backgroundColor = this._getPriorityColor(this.task.priority);
+        }
+    }
+
+
+    _getPriorityColor(priority) {
+        const priorityColors = {
+            low: '#6EE7B7',
+            medium: '#FBBF24',
+            high: '#F87171',
+        };
+        return priorityColors[priority] || '#FBBF24';
+    }
+
+    _render() {
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${styles}
             </style>
     
             <div class="task-header">

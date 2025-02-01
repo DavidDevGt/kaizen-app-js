@@ -55,9 +55,31 @@ class PDFReaderPage extends HTMLElement {
         z-index: 10;
       }
 
+      .title-and-back {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-grow: 1;
+      }
+
       h2 {
         margin: 0;
         font-size: 1.25rem;
+        flex-grow: 1;
+        text-align: center;
+      }
+
+      .back-btn {
+        background: lightgray;
+        font-size: 1.5rem;
+        cursor: pointer;
+        border: none;
+        display: flex;
+        padding: 0.35rem;
+        border-radius: 4px;
+        justify-content: center;
+        align-items: center;
+        scale: 0.7;
       }
 
       .toolbar {
@@ -131,7 +153,10 @@ class PDFReaderPage extends HTMLElement {
 
     <div class="layout-container">
       <header>
-        <h2>${this.CONFIG.title}</h2>
+        <div class="title-and-back">
+          <button class="back-btn" id="go-home">🔙</button>
+          <h2>${this.CONFIG.title}</h2>
+        </div>
         <div class="toolbar">
           ${this.CONFIG.toolbarButtons
             .map((btn) => `
@@ -161,6 +186,8 @@ class PDFReaderPage extends HTMLElement {
         this.handleAction(action);
       });
     });
+    this.shadowRoot.querySelector("#go-home").addEventListener("click", () => window.router.loadRoute("/"));
+
   }
 
   cleanup() {}

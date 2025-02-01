@@ -2,77 +2,7 @@ import TaskCard from "../web-components/task-card.js";
 import TaskModal from "../web-components/task-modal.js";
 import PreferencesService from "../services/preferencesService.js";
 
-class TasksPage extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: "open" });
-
-        this.CONFIG = {
-            defaultTitle: 'TaskManager',
-            defaultSubtitle: 'Organiza tus tareas de manera eficiente y simple',
-            emptyStateMessage: 'No hay tareas pendientes. ¡Comienza agregando una!',
-
-            addTaskButtonLabel: 'Agregar tarea',
-            storageKey: 'tasks_data',
-            tags: ['Personal', 'Work', 'Health', 'Study', 'Home', 'Other'],
-        };
-
-        // Inicializar tareas como un arreglo vacío
-        this.tasks = [];
-        this._render();
-    }
-
-    async connectedCallback() {
-        console.log('TasksPage component montado');
-        await this._loadTasks();
-        this._renderTasks();
-    }
-    
-
-    static get observedAttributes() {
-        return ['title', 'description', 'completed', 'priority', 'tags', 'image'];
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (oldValue !== newValue) {
-            if (name === 'tags') {
-                this.task[name] = newValue.split(',').map(tag => tag.trim());
-            } else if (name === 'completed') {
-                this.task[name] = newValue === 'true';
-            } else {
-                this.task[name] = newValue;
-            }
-            this._render();
-        }
-    }
-
-    /**
-     * Carga las tareas desde PreferencesService
-     */
-    async _loadTasks() {
-        try {
-            const savedTasks = await PreferencesService.getPreference(this.CONFIG.storageKey);
-            this.tasks = savedTasks ? savedTasks : [];
-        } catch (error) {
-            console.error('Error al cargar las tareas:', error);
-            this.tasks = [];
-        }
-    }
-
-    /**
-     * Guarda las tareas en PreferencesService
-     */
-    async _saveTasks() {
-        try {
-            await PreferencesService.setPreference(this.CONFIG.storageKey, this.tasks);
-        } catch (error) {
-            console.error('Error al guardar las tareas:', error);
-        }
-    }
-
-    _render() {
-        this.shadowRoot.innerHTML = `
-            <style>
+const styles = `
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap'); 
                 :host { 
                     --primary-color: #2563eb; 
@@ -213,6 +143,80 @@ class TasksPage extends HTMLElement {
                         display: none; 
                     } 
                 } 
+`;
+
+class TasksPage extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+
+        this.CONFIG = {
+            defaultTitle: 'TaskManager',
+            defaultSubtitle: 'Organiza tus tareas de manera eficiente y simple',
+            emptyStateMessage: 'No hay tareas pendientes. ¡Comienza agregando una!',
+
+            addTaskButtonLabel: 'Agregar tarea',
+            storageKey: 'tasks_data',
+            tags: ['Personal', 'Work', 'Health', 'Study', 'Home', 'Other'],
+        };
+
+        this.tasks = [];
+        this._render();
+    }
+
+
+    async connectedCallback() {
+        console.log('TasksPage component montado');
+        await this._loadTasks();
+        this._renderTasks();
+    }
+
+
+    static get observedAttributes() {
+        return ['title', 'description', 'completed', 'priority', 'tags', 'image'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (oldValue !== newValue) {
+            if (name === 'tags') {
+                this.task[name] = newValue.split(',').map(tag => tag.trim());
+            } else if (name === 'completed') {
+                this.task[name] = newValue === 'true';
+            } else {
+                this.task[name] = newValue;
+            }
+            this._render();
+        }
+    }
+
+    /**
+     * Carga las tareas desde PreferencesService
+     */
+    async _loadTasks() {
+        try {
+            const savedTasks = await PreferencesService.getPreference(this.CONFIG.storageKey);
+            this.tasks = savedTasks ? savedTasks : [];
+        } catch (error) {
+            console.error('Error al cargar las tareas:', error);
+            this.tasks = [];
+        }
+    }
+
+    /**
+     * Guarda las tareas en PreferencesService
+     */
+    async _saveTasks() {
+        try {
+            await PreferencesService.setPreference(this.CONFIG.storageKey, this.tasks);
+        } catch (error) {
+            console.error('Error al guardar las tareas:', error);
+        }
+    }
+
+    _render() {
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${styles}
             </style>
 
             <main class="tasks-container">
@@ -262,7 +266,7 @@ class TasksPage extends HTMLElement {
                 </div>
             `;
 
-        
+
         } else {
             // Añadir clase para animación
             this.tasksContainer.classList.add('show');
@@ -335,13 +339,13 @@ class TasksPage extends HTMLElement {
 
         taskModal.addEventListener("task-updated", (e) => {
             const updatedTask = e.detail;
-            this.tasks = this.tasks.map(task => 
+            this.tasks = this.tasks.map(task =>
                 task.id === updatedTask.id ? { ...task, ...updatedTask } : task
             );
             this._saveTasks();
             this._renderTasks();
         });
-        
+
     }
 }
 

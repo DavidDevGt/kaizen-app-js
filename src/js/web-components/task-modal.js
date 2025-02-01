@@ -1,14 +1,4 @@
-class TaskModal extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: "open" });
-        this._render();
-        this._handleKeyDown = this._handleKeyDown.bind(this);
-    }
-
-    _render() {
-        this.shadowRoot.innerHTML = `
-            <style>
+const styles = `
                 :host {
                     --modal-background: #ffffff;
                     --modal-border-radius: 8px;
@@ -193,6 +183,19 @@ class TaskModal extends HTMLElement {
                         font-size: 1.25rem;
                     }
                 }
+`;
+class TaskModal extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+        this._render();
+        this._handleKeyDown = this._handleKeyDown.bind(this);
+    }
+
+    _render() {
+        this.shadowRoot.innerHTML = `
+            <style>
+                ${styles}
             </style>
 
             <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">

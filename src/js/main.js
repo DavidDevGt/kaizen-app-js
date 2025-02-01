@@ -4,7 +4,7 @@ import requestPermissions from "./pluginsPermissions";
 
 /** Import pages */
 import MainMenuPage from './pages/mainMenuPage';
-import TasksPage from './pages/taskManagerPage';
+import TasksPage from './pages/taskPage';
 import SettingsPage from './pages/settingsPage';
 import PDFReaderPage from './pages/pdfReaderPage';
 

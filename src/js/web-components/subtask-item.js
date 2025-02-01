@@ -22,56 +22,59 @@ class SubtaskItem extends HTMLElement {
 
     connectedCallback() {
         this._render();
-        this._setupEventListeners();
     }
 
     disconnectedCallback() {
-        this._cleanup();
+        // aqui se limpian los recursos pero aun no lo implemento xd
     }
 
     _render() {
         this.shadowRoot.innerHTML = `
-            <style>
-                :host {
-                    display: flex;
-                    align-items: center;
-                    padding: 0.5rem 1rem;
-                    border-radius: 8px;
-                    background-color: var(--background-secondary, #f9f9f9);
-                    transition: background-color 0.3s;
-                }
+        <style>
+          :host {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background-color: var(--background-secondary, #f9f9f9);
+            transition: background-color 0.3s;
+          }
+  
+          :host(:hover) {
+            background-color: var(--background-hover, #f1f1f1);
+          }
+  
+          input[type="checkbox"] {
+            margin-right: 0.75rem;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+          }
+  
+          span {
+            flex: 1;
+            font-size: 1rem;
+            color: var(--text-primary, #333);
+            text-decoration: ${this.subtask.completed ? 'line-through' : 'none'};
+            transition: color 0.3s, text-decoration 0.3s;
+          }
+  
+          @media (prefers-color-scheme: dark) {
+            /* Eliminado para mantener el diseño minimalista con fondo blanco */
+          }
+        </style>
+        <input type="checkbox" ${this.subtask.completed ? 'checked' : ''} />
+        <span>${this.subtask.title}</span>
+      `;
 
-                :host(:hover) {
-                    background-color: var(--background-hover, #f1f1f1);
-                }
-
-                input[type="checkbox"] {
-                    margin-right: 0.75rem;
-                    width: 16px;
-                    height: 16px;
-                    cursor: pointer;
-                }
-
-                span {
-                    flex: 1;
-                    font-size: 1rem;
-                    color: var(--text-primary, #333);
-                    text-decoration: ${this.subtask.completed ? 'line-through' : 'none'};
-                    transition: color 0.3s, text-decoration 0.3s;
-                }
-
-                @media (prefers-color-scheme: dark) {
-                    /* Eliminado para mantener el diseño minimalista con fondo blanco */
-                }
-            </style>
-            <input type="checkbox" ${this.subtask.completed ? 'checked' : ''} />
-            <span>${this.subtask.title}</span>
-        `;
+        this._setupEventListeners();
     }
 
     _setupEventListeners() {
         const checkbox = this.shadowRoot.querySelector('input[type="checkbox"]');
         if (checkbox) {
+            checkbox.removeEventListener('change', this._onCheckboxChange);
+
             this._onCheckboxChange = (e) => {
                 this.subtask.completed = e.target.checked;
                 this.dispatchEvent(new CustomEvent('subtask-changed', {
@@ -80,14 +83,8 @@ class SubtaskItem extends HTMLElement {
                     composed: true,
                 }));
             };
-            checkbox.addEventListener('change', this._onCheckboxChange);
-        }
-    }
 
-    _cleanup() {
-        const checkbox = this.shadowRoot.querySelector('input[type="checkbox"]');
-        if (checkbox && this._onCheckboxChange) {
-            checkbox.removeEventListener('change', this._onCheckboxChange);
+            checkbox.addEventListener('change', this._onCheckboxChange);
         }
     }
 
