@@ -8,7 +8,6 @@ import TasksPage from './pages/taskPage';
 import SettingsPage from './pages/settingsPage';
 import PDFReaderPage from './pages/pdfReaderPage';
 
-
 /** Import routes */
 import { router } from './router';
 
